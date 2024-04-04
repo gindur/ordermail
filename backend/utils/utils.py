@@ -14,8 +14,7 @@ def normalize_string(string):
     #remove duplicate spaces, strip, lowercase
     return ' '.join(string.split()).strip().lower()
 
-
-def normalize_row(row):
+def normalize_order_row(row):
     if row['email_address'].startswith('_'):
             row['email_address'] = row['email_address'][1:]
     row['company_name'] = normalize_string(row['company_name'])
@@ -28,4 +27,3 @@ def normalize_row(row):
     row['country'] = normalize_string(row['country'])
     row['address'] = normalize_string(row['address'])
     row['address2'] = normalize_string(row['address2'])
-    return row

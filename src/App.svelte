@@ -43,8 +43,8 @@
 
 	onMount(async () => {
 		orders = await fetchOrders();
-		orders = orders.reverse();
-		customers = await fetchCustomers();
+		//orders = orders.reverse();
+		//customers = await fetchCustomers();
 	});
 </script>
 

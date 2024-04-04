@@ -1,7 +1,7 @@
 import csv
 import sys
 import uuid
-from utils import load_and_dump, normalize_row
+from utils import load_and_dump, normalize_order_row
 
 no_marketing_file_path = '../data/no_marketing'
 cold_file_path = '../data/cold'
@@ -31,7 +31,7 @@ def load_from_csv(csv_file_path):
         with open(csv_file_path, mode='r', encoding='utf-8') as csv_file:
             csv_reader = csv.DictReader(csv_file,  delimiter=';')
             for row in csv_reader:
-                normalize_row(row)
+                normalize_order_row(row)
                 row['products'] = parse_products(row['products'])
                 create_customer(row, company_name_to_id, customers)
                 orders.append(row)

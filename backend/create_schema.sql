@@ -24,7 +24,6 @@ CREATE TABLE IF NOT EXISTS contacts(
     email_address TEXT,
     first_name TEXT,
     last_name TEXT,
-    phonenumber TEXT,
     email_marketing BIT,
     company_id TEXT,
     PRIMARY KEY(email_address),
