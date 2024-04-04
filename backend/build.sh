@@ -1,0 +1,1 @@
+sqlite3 db.sqlite < create_schema.sql
