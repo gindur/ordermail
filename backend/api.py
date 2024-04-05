@@ -31,6 +31,9 @@ def get_orders():
     query = """
         SELECT *
         FROM orders
+         JOIN contacts USING (email_address)
+         JOIN companies USING (company_id)
+         JOIN contact_phonenumbers USING (email_address)
         WHERE TRUE 
         """
 
@@ -70,18 +73,26 @@ def get_order(order_id):
 @catch()
 @app.route('/api/contacts', methods=['GET'])
 def get_customers():
-    contacts = cursor().execute("SELECT * FROM contacts").fetchall()
+    contacts = cursor().execute("SELECT * FROM contacts JOIN companies USING (company_id) LEFT JOIN contact_phonenumbers USING(email_address)").fetchall()
     return response(contacts)
 
+@catch()
 @app.route('/api/companies', methods=['GET'])
 def get_companies():
     companies = cursor().execute("SELECT * FROM companies").fetchall()
     return response(companies)
 
+@catch()
 @app.route('/api/products', methods=['GET'])
 def get_products():
     products = cursor().execute("SELECT * FROM products").fetchall()
     return response(products)
+
+@catch()
+@app.route('/api/locations', methods=['GET'])
+def get_locations():
+    locations = cursor().execute("SELECT * FROM locations JOIN companies USING (company_id)").fetchall()
+    return response(locations)
 
 
 if __name__ == '__main__':

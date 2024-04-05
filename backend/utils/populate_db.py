@@ -157,7 +157,7 @@ def populate_orders():
             )
         (total_amount,) = c.execute(
             """
-            SELECT sum(total_price) FROM orderlines WHERE order_id = ?      
+            SELECT sum(total_price * qty) FROM orderlines WHERE order_id = ?      
             """,
             (order['order_id'],)
         ).fetchone()
