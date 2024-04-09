@@ -1,5 +1,4 @@
-import sqlite3
-from flask import Flask, g, jsonify, request
+from flask import Flask, g
 from flask_cors import CORS
 import logging
 from urllib.parse import unquote
@@ -31,9 +30,9 @@ def get_orders():
     query = """
         SELECT *
         FROM orders
-         JOIN contacts USING (email_address)
-         JOIN companies USING (company_id)
-         JOIN contact_phonenumbers USING (email_address)
+         LEFT JOIN contacts USING (email_address)
+         LEFT JOIN companies USING (company_id)
+         LEFT JOIN contact_phonenumbers USING (email_address)
         GROUP BY order_id
         """
 
@@ -55,6 +54,34 @@ def get_order(order_id):
         (order_id,)
     ).fetchall()
     return response(order)
+
+@catch()
+@app.route('/api/orders/<from_date>/<to_date>/<divOption>', methods=['GET'])
+def get_orders_between_dates(from_date, to_date, divOption):
+    """Gets orders between two dates, grouped by week, month or year"""
+    divisions = {
+        'week': '%Y-%W',
+        'month': '%Y-%m',
+        'year': '%Y'
+    }
+    division = divisions.get(divOption)
+    if not division:
+        return response('Invalid division option', 400)
+    
+    # Construct the query with parameter placeholders
+    query = """
+        SELECT strftime(:division, date_paid) as date, SUM(total_amount) as revenue
+        FROM orders
+        WHERE date_paid BETWEEN strftime('%Y-%m-%d',:from_date) AND strftime('%Y-%m-%d',:to_date)
+        GROUP BY strftime(:division, date_paid)
+        ORDER BY date
+    """
+    orders = cursor().execute(query, {'division': division, 'from_date': from_date, 'to_date': to_date}).fetchall()
+    return response(orders)
+    
+    
+            
+    
 
 @catch()
 @app.route('/api/contacts', methods=['GET'])
@@ -79,6 +106,8 @@ def get_products():
 def get_locations():
     locations = cursor().execute("SELECT * FROM locations JOIN companies USING (company_id)").fetchall()
     return response(locations)
+
+
 
 
 if __name__ == '__main__':

@@ -21,7 +21,7 @@
 
 <style>
     .nav{
-        margin-bottom: 40px;
+        margin-bottom: 10px;
     }
     ul {
         display:flex;

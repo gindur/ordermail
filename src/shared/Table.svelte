@@ -96,6 +96,7 @@
 <style>
   tr:hover td:not(.expanded) {
   background-color: #dcdcdc;
+  cursor: pointer;
 }
 
 .expanded {

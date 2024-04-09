@@ -2,7 +2,9 @@
 	import Table from './shared/Table.svelte';
 	import Modal from './Modal.svelte';
 	import Header from './components/Header.svelte'
+	import SalesChart from './components/SalesChart.svelte';
 	import {onMount} from 'svelte';
+	
 	import { fetchCompanies, fetchOrders, fetchOrder, fetchContacts, fetchLocations, fetchProducts } from './order_api';
 
   	let showModal = false;
@@ -121,6 +123,7 @@
 		<h1>Välkommen till ordermail</h1>
 		<p>Nedan kan du se beställningar och lägga in nya beställningar.</p>
 		<button on:click={() => toggleModal()}>Skapa order</button>
+		<SalesChart/>
 		<div class="mainTable">
 			<Table data={orderTableData} expandType={'order'} keyField={'Ordernummer'} getExpandedContent={expandedOrderContent}/>
 		</div>
@@ -152,14 +155,14 @@
 	main {
 		text-align: center;
 		padding: 1em;
-		max-width: 240px;
+		max-width: 90%!important;
 		margin: 0 auto;
 	}
 
 	h1 {
 		color: black;
 		text-transform: uppercase;
-		font-size: 4em;
+		font-size: 2em;
 		font-weight: 100;
 	}
 
