@@ -34,22 +34,8 @@ def get_orders():
          JOIN contacts USING (email_address)
          JOIN companies USING (company_id)
          JOIN contact_phonenumbers USING (email_address)
-        WHERE TRUE 
+        GROUP BY order_id
         """
-
-    if request.args:
-        if order_id := request.args.get('order_id'):
-            query += "AND order_id = ? "
-            params.append(order_id)
-        if email_address := request.args.get('email_address'):
-            query += "AND email_address = ? "
-            params.append(unquote(email_address))
-        if from_date_paid := request.args.get('from_date_paid'):
-            query += "AND date_paid >= ? "
-            params.append(from_date_paid)
-        if to_date_paid := request.args.get('to_date_paid'):
-            query += "AND date_paid <= ? "
-            params.append(to_date_paid)
 
     orders = cursor().execute(query, params).fetchall()
     return response(orders)
@@ -60,14 +46,14 @@ def get_order(order_id):
     logger.info(f"Fetching order {order_id}")
     order = cursor().execute(
         """
-        SELECT sku
+        SELECT desc, sku, item_price, qty, total_price, orderline_status, images
         FROM orders
-        JOIN orderlines USING (order_id)
-        WHERE order_id = ?
+         JOIN orderlines USING (order_id)
+         JOIN products USING (sku)
+        WHERE order_id = ?  
         """,
         (order_id,)
     ).fetchall()
-    logger.info(order)
     return response(order)
 
 @catch()

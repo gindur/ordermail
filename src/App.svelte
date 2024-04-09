@@ -3,7 +3,7 @@
 	import Modal from './Modal.svelte';
 	import Header from './components/Header.svelte'
 	import {onMount} from 'svelte';
-	import { fetchCompanies, fetchOrders, fetchContacts, fetchLocations, fetchProducts } from './order_api';
+	import { fetchCompanies, fetchOrders, fetchOrder, fetchContacts, fetchLocations, fetchProducts } from './order_api';
 
   	let showModal = false;
 	// Navigation
@@ -72,6 +72,24 @@
 		console.log("Nav: ", active);
 	}
 
+	//SELECT desc, sku, item_price, qty, total_price, orderline_status, images
+	const expandedOrderContent = async (order_id) => {
+		console.log("expanded content")
+		const fetchedProducts = await fetchOrder(order_id)
+		
+		let products = fetchedProducts.data.map(product => ({
+			"Bild": product.images,
+			"SKU": product.sku,
+			"Produktnamn": product.desc,
+			"Pris": product.item_price.toFixed(2),
+			"Antal": product.qty,
+			"Totalt": product.total_price.toFixed(2),
+			"Status": product.orderline_status
+		}));
+		console.log(products)
+		return products;
+	}
+
 	onMount(async () => {
 		const fetchedOrders = await fetchOrders();
 		orders = fetchedOrders.data;
@@ -104,12 +122,12 @@
 		<p>Nedan kan du se beställningar och lägga in nya beställningar.</p>
 		<button on:click={() => toggleModal()}>Skapa order</button>
 		<div class="mainTable">
-			<Table data={orderTableData} />
+			<Table data={orderTableData} expandType={'order'} keyField={'Ordernummer'} getExpandedContent={expandedOrderContent}/>
 		</div>
 	{:else if active === navItems[1]}
 		<h1>Företagskunder</h1>
 		<div class="mainTable">
-			<Table data={companyTableData}/>
+			<Table data={companyTableData} keyField={'company_name'}/>
 		</div>
 	{:else if active === navItems[2]}
 		<h1>Kontaktpersoner</h1>

@@ -1,73 +1,40 @@
-export async function fetchOrders() {
+async function apifetch(endpoint) {
     try {
-        const response = await fetch('http://localhost:5000/api/orders');
+        const response = await fetch(`http://localhost:5000/api/${endpoint}`);
         if (!response.ok) {
-            throw new Error('Failed to fetch orders');
+            throw new Error(`Failed to fetch ${endpoint}`);
         }
         const data = await response.json();
-        console.log('Fetched orders:', data);  // Log the fetched data
+        console.log(`Fetched ${endpoint}:`, data);  // Log the fetched data
         return data;
     } catch (error) {
-        console.log('Error fetching orders:', error);
+        console.log(`Error fetching ${endpoint}:`, error);
         return [];
+    
     }
 }
+
+export async function fetchOrders() {
+    return apifetch('orders');
+}
+
+export async function fetchOrder(id) {
+    return apifetch(`orders/${id}`);
+}
+
 export async function fetchCompanies() {
-    try {
-        const response = await fetch('http://localhost:5000/api/companies');
-        if (!response.ok) {
-            throw new Error('Failed to fetch companies');
-        }
-        const data = await response.json();
-        console.log('Fetched companies:', data);  // Log the fetched data
-        return data;
-    } catch (error) {
-        console.log('Error fetching companies:', error);
-        return [];
-    }
+    return apifetch('companies');
 }
 
 export async function fetchProducts() {
-    try {
-        const response = await fetch('http://localhost:5000/api/products');
-        if (!response.ok) {
-            throw new Error('Failed to fetch products');
-        }
-        const data = await response.json();
-        console.log('Fetched products:', data);  // Log the fetched data
-        return data;
-    } catch (error) {
-        console.log('Error fetching products:', error);
-        return [];
-    }
+    return apifetch('products');
 }
 
 export async function fetchLocations() {
-    try {
-        const response = await fetch('http://localhost:5000/api/locations');
-        if (!response.ok) {
-            throw new Error('Failed to fetch locations');
-        }
-        const data = await response.json();
-        console.log('Fetched locations:', data);  // Log the fetched data
-        return data;
-    } catch (error) {
-        console.log('Error fetching locations:', error);
-        return [];
-    }
+    return apifetch('locations');
 }
 
 export async function fetchContacts() {
-    try {
-        const response = await fetch('http://localhost:5000/api/contacts');
-        if (!response.ok) {
-            throw new Error('Failed to fetch contacts');
-        }
-        const data = await response.json();
-        console.log('Fetched contacts:', data);  // Log the fetched data
-        return data;
-    } catch (error) {
-        console.log('Error fetching contacts:', error);
-        return [];
-    }
+    return apifetch('contacts');
 }
+
